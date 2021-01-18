@@ -3,6 +3,7 @@
 const _ = require('lodash');
 const { prop } = require('lodash/fp');
 const crypto = require('crypto');
+const uuid = require('uuid').v4;
 
 module.exports = () => {
   // register custom permissions

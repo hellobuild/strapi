@@ -8,43 +8,27 @@ module.exports = () => {
 
   Object.values(strapi.models).forEach(model => {
     if (_.get(model, 'pluginOptions.i18n.enabled', false) === true) {
-      _.set(model.attributes, '_root', {
+      _.set(model.attributes, 'strapi_id', {
         writable: true,
         private: false,
         configurable: false,
-        collection: 'root',
-        plugin: 'i18n',
+        type: 'string',
       });
 
-      _.set(model.attributes, '_localizations', {
+      _.set(model.attributes, 'localizations', {
         writable: true,
         private: false,
         configurable: false,
-        collection: 'localization',
-        plugin: 'i18n',
+        type: 'json',
       });
 
-      _.set(model.attributes, '_locale', {
+      _.set(model.attributes, 'locale', {
         writable: true,
         private: false,
         configurable: false,
         type: 'string',
         default: 'en-US',
       });
-
-      _.set(model.attributes, 'self', {
-        writable: true,
-        private: false,
-        configurable: false,
-        collection: model.modelName,
-        plugin: model.plugin,
-      });
-
-      // _.set(model.attributes, '_localizations', {
-      //   writable: false,
-      //   configurable: false,
-      //   collection: model.modelName,
-      // });
     }
   });
 
@@ -53,3 +37,21 @@ module.exports = () => {
   //   after() {},
   // });
 };
+
+/*
+ Strapi loading steps so we know where to integrate
+
+1. new Strapi(dir)
+2. loading env vars
+3. loading config (global config)
+5. loading plugins (external, local)
+6. loading hooks (global or api)
+6. loading middlewares (global or api)
+4. loading apis (controllers, services, models, config)
+5. loading components (global or api)
+6. internal services (core-api, entity server, metrics, webhooks, database)
+7. Initialize middlewares
+8. Init hooks
+9. Bootstrap ?? too big
+10. start http server
+*/
