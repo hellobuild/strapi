@@ -10,7 +10,7 @@
 ## API
 
 - If we consider the entities to be different we can just auto fill the locale & localizations.
-- Any localization can be used as root & the non localized fields will be copied from it
+- Any localization can be used as root & the non localized fields will be copied from it.
 - We handle localizations linkage on our side to make it easier for the users (SDK PLEASE)
 
 ### Fetch entities
@@ -46,30 +46,26 @@ We fetch by id so nothing to change
 _Response_
 
 ```json
-[
-  {
-    "id": 1,
-    "title": "Hello",
-    "locale": "en-US",
-    "localizations": [
-      { "id": 1, "locale": "en-US" },
-      { "id": 2, "locale": "fr-FR" }
-      { "id": 3, "locale": "en-GB" }
-    ]
-  }
-]
+{
+  "id": 1,
+  "title": "Hello",
+  "locale": "en-US",
+  "localizations": [
+    { "id": 1, "locale": "en-US" },
+    { "id": 2, "locale": "fr-FR" }
+    { "id": 3, "locale": "en-GB" }
+  ]
+}
 ```
 
 ### Create
 
 - Set the `locale` to the default if not provided
 - Init the localizations
-- Set the entity as `root` entity
-  - Use a sub route to create new localizations from this one ? why not use directly the ?locale param ?
 
-**POST /articles**
+- `POST /articles`
 
-#### sub route or query param
+#### Create a localization from an existing entity. (sub route or query param)
 
 - Copy the `strapiId` to the new entity to use as a ref for relations
 - Use any entity to update the localizations by providing a different locale in the query string
@@ -77,27 +73,29 @@ _Response_
 - use the :id as root entity for the non localized fields
 - Create a new entity & link them together
 
-**PUT /articles/:id/localizations/:locale**
-**PUT /articles/:id?locale=xxx**
+- `PUT /articles/:id/localizations/:locale`
+- `POST /articles/:id/localizations`
+- `PUT /articles/:id?locale=xxx`
 
 ### Update
 
 - Disallow updating the `locale`
 - Update the other localizations non localized fields so the fields stay the same => Do that as a reaction (afterUpdate, ignore concurrency pbls)
+
   - easy on mongo as the data is nested in the object
   - harder on sql with the components will need some custom queries)
 
-**PUT /articles/1**
+- `PUT /articles/1`
 
-#### Sub route or query string
+#### Update a localization from an existing entity (Sub route or query string)
 
 - Only allow the localized fields
 - Based on the id, find the corresponding locale requested. then update it
 - When can you update the non localized fields ? only on the /articles/:id root but from any locale
 - Allow the update from any :id
 
-**PUT /articles/:id/localizations/:locale**
-**PUT /articles/:id?locale=xxx**
+- `PUT /articles/:id/localizations/:locale`
+- `PUT /articles/:id?locale=xxx`
 
 ### Delete
 
@@ -105,15 +103,15 @@ _Response_
 - Need to update the localizations
 - No root needed we use the localizations list of the :id to update the others at once.
 
-**DELETE /articles/:id**
+- `DELETE /articles/:id`
 
-#### sub query or query string
+#### Delete a localization (sub route or query string)
 
 - Use the :id as root to find the corresponding localizations & delete it
 - Do the same updates as in the main delete
 
-**DELETE /articles/:id/localizations/:locale**
-**DELETE /articles/:id?locale=xx**
+- ``DELETE /articles/:id/localizations/:locale`
+- ``DELETE /articles/:id?locale=xx`
 
 ## Content manager
 
